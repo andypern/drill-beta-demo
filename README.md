@@ -61,16 +61,6 @@ In the UI (http://ip:8047) , go to the Storage page, then create the following s
 	}
 
 
-####HBASE
-
-	{
-	  "type" : "hbase",
-	  "enabled" : true,
-	  "config" : {
-	    "hbase.zookeeper.quorum" : "localhost",
-	    "hbase.zookeeper.property.clientPort" : "5181"
-	  }
-	}
 	
 	
 ####MFS
@@ -147,5 +137,65 @@ In the UI (http://ip:8047) , go to the Storage page, then create the following s
 ###Check sample queries
 
 
+The setup.sh script creates an alias, to make it easier to launch sqlline.  to verify if your queries are working:
 
+	sqlline
+
+At the sqlline prompt:
+
+	0: jdbc:drill:> show databases;
+
+You should see something like this:
+
+	+-------------+
+	| SCHEMA_NAME |
+	+-------------+
+	| hive.default |
+	| hbase       |
+	| sys         |
+	| MFS.default |
+	| MFS.nested  |
+	| MFS.root    |
+	| MFS.views   |
+	| MFS.flat    |
+	| INFORMATION_SCHEMA |
+	| MAPRDB      |
+	+-------------+
+
+Switch to hive.default workspace:
+
+	0: jdbc:drill:> use hive.`default`;
+
+Verify tables exist:
+
+	0: jdbc:drill:> show tables;
+	+--------------+------------+
+	| TABLE_SCHEMA | TABLE_NAME |
+	+--------------+------------+
+	| hive.default | orders     |
+	| hive.default | customers  |
+	+--------------+------------+
+	2 rows selected (1.157 seconds)
+
+Quick selects:
+
+	select * from orders limit 10;
+	select * from customers limit 10;
+
+
+Now for MaRDB:
+	
+	0: jdbc:drill:> use maprdb;
+
+Verify tables exist:
+
+	0: jdbc:drill:> show tables;
+	+--------------+------------+
+	| TABLE_SCHEMA | TABLE_NAME |
+	+--------------+------------+
+	| hbase        | products   |
+	+--------------+------------+
+	1 row selected (0.437 seconds)
+	
+	
 

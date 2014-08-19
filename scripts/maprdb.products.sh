@@ -14,9 +14,11 @@ TABLEPATH=${NFSMOUNT}/tables/${TABLENAME}
  		rm -f  ${TABLEPATH}
  fi
 
-maprcli table create -path ${TABLEPATH}
+maprcli table create -path ${TABLEPATH} -defaultreadperm g:mapr -defaultwriteperm g:mapr -defaultappendperm g:mapr
 maprcli table cf create -path ${TABLEPATH} -cfname details 
 maprcli table cf create -path ${TABLEPATH} -cfname pricing 
+
+/usr/bin/hadoop fs -chmod 777 ${TABLEPATH}
 
 HBVERSION=$( cat /opt/mapr/hbase/hbaseversion )
 

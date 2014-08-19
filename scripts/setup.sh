@@ -40,7 +40,7 @@ if ! rpm -qa | grep drill
 fi
 
 
-# install
+# i
 
 
 
@@ -89,9 +89,10 @@ mkdir -p ${DATADIR}
 cp -R ${REPODIR}/data/output/* ${DATADIR}
 
 
-#make the HBASE table
+#make the HBASE table..not right now because we dont have hbase regionserver/master installed on the sandbox
 
-sh ${REPODIR}/scripts/hbase.products.sh
+
+#sh ${REPODIR}/scripts/hbase.products.sh
 
 #make the products table in MapRDB as well
 
@@ -112,6 +113,10 @@ sh ${REPODIR}/scripts/maprdb.products.sh
 
 /usr/bin/hive -f ${REPODIR}/scripts/orders.hive.hql
 
+# add some aliases
+
+echo "alias sqlline='/opt/mapr/drill/drill-0.4.0/bin/sqlline -u jdbc:drill:'" >> /root/.bashrc
+source /root/.bashrc
 
 
 
