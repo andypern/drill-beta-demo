@@ -16,6 +16,8 @@ To make life easier, we'll be using a github package to grab the dataset and to 
 
 ###Install packages
 
+To start, ssh as root to your sandbox VM.
+
 Install git:
 
 	yum install -y git
