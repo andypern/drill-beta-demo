@@ -16,6 +16,10 @@ To make life easier, we'll be using a github package to grab the dataset and to 
 
 ###Install packages
 
+Install git:
+
+	yum install -y git
+
 Go to proper directory:
 
 	cd /mapr/demo.mapr.com

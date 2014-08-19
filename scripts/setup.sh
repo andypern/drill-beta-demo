@@ -28,15 +28,21 @@ else
 fi
 
 
-# grab tarball from package.mapr.com
-cd /tmp
-rm -f *.rpm
-wget http://package.mapr.com/labs/drill/redhat/mapr-drill-0.4.0.26711-1.noarch.rpm
+# check if drill RPM is already installed
+
+if ! rpm -qa | grep drill
+	then
+	# grab tarball from package.mapr.com
+	cd /tmp
+	rm -f *.rpm
+	wget http://package.mapr.com/labs/drill/redhat/mapr-drill-0.4.0.26711-1.noarch.rpm
+	rpm -ivh /tmp/mapr-drill-0.4.0.26711-1.noarch.rpm
+fi
 
 
 # install
 
-rpm -ivh /tmp/mapr-drill-0.4.0.26711-1.noarch.rpm
+
 
 
 
@@ -56,9 +62,9 @@ echo "export HADOOP_HOME="/opt/mapr/hadoop/hadoop-0.20.2/"" >> /opt/mapr/drill/d
 /opt/mapr/server/configure.sh -R
 
 
-sleep 10
+sleep 30
 
-echo "restarting drillbits"
+echo "sleeping 30 seconds, then restarting drillbits"
 maprcli node services -name drill-bits -action restart -filter csvc==drill-bits
 
 
@@ -80,7 +86,7 @@ DATADIR=${NFSMOUNT}/data
 
 mkdir -p ${DATADIR}
 
-cp -R ${REPODIR}/data/output ${DATADIR}
+cp -R ${REPODIR}/data/output/* ${DATADIR}
 
 
 #make the HBASE table
@@ -105,6 +111,7 @@ sh ${REPODIR}/scripts/maprdb.products.sh
 /usr/bin/hive -f ${REPODIR}/scripts/customers.hive.table.hql
 
 /usr/bin/hive -f ${REPODIR}/scripts/orders.hive.hql
+
 
 
 
