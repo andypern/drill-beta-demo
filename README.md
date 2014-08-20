@@ -207,6 +207,8 @@ Verify tables exist:
 	 from products t limit 10;
 	 
 
-	 
-	 
+	
+Filesystem queries:
+
+
 
