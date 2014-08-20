@@ -1,0 +1,204 @@
+clicks phase-1:
+
+
+p1.gold  
+
+[
+  {"name":"trans_id","class":"int", "min":10000, "max":20000},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-04-01", "end":"2014-04-30"},
+  {"name":"time", "class":"date", "format":"HH:mm:ss"},
+  {"name":"user_info","class":"map","value":
+   [
+    {"name":"cust_id", "class":"int", "min":1001,"max":5000, "skew":1},
+    {"name":"device", "class":"string", "dist":{"IOS5":0.4, "IOS6":0.15, "IOS7":0.10, "AOS4.2":0.20, "AOS4.3":0.10, "AOS4.4":0.05 }},
+    {"name":"state", "class":"state"}
+   ]
+  },
+  {"name":"trans_info", "class":"map","value":
+   [
+    {"name":"prod_id", "class":"sequence", "length":4,
+     "base": {"class": "foreign-key", "size":200, "skew":1 }
+    },
+    {"name":"purch_flag", "class":"string", "dist":{"false":0.75, "true":0.25 }}
+   ]
+  }
+
+]
+
+
+p1.silver
+
+[
+  {"name":"trans_id","class":"int", "min":20001, "max":30000},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-04-30", "end":"2014-04-30"},
+  {"name":"time", "class":"date", "format":"HH:mm:ss"},
+  {"name":"user_info","class":"map","value":
+   [
+    {"name":"cust_id", "class":"int", "min":5001,"max":15000, "skew":1},
+    {"name":"device", "class":"string", "dist":{"IOS5":0.4, "IOS6":0.15, "IOS7":0.10, "AOS4.2":0.20, "AOS4.3":0.10, "AOS4.4":0.05 }},
+    {"name":"state", "class":"state"}
+   ]
+  },
+  {"name":"trans_info", "class":"map","value":
+   [
+    {"name":"prod_id", "class":"sequence", "length":4,
+     "base": {"class": "foreign-key", "size":964, "skew":1 }
+    },
+    {"name":"purch_flag", "class":"string", "dist":{"false":0.80, "true":0.20 }}
+   ]
+  }
+
+]
+
+p1.basic
+
+[
+  {"name":"trans_id","class":"int", "min":30001, "max":40000},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-04-01", "end":"2014-04-30"},
+  {"name":"time", "class":"date", "format":"HH:mm:ss"},
+  {"name":"user_info","class":"map","value":
+   [
+    {"name":"cust_id", "class":"int", "min":15001,"max":25000, "skew":1},
+    {"name":"device", "class":"string", "dist":{"IOS5":0.4, "IOS6":0.15, "IOS7":0.10, "AOS4.2":0.20, "AOS4.3":0.10, "AOS4.4":0.05 }},
+    {"name":"state", "class":"state"}
+   ]
+  },
+  {"name":"trans_info", "class":"map","value":
+   [
+    {"name":"prod_id", "class":"sequence", "length":4,
+     "base": {"class": "foreign-key", "size":964, "skew":1 }
+    },
+    {"name":"purch_flag", "class":"string", "dist":{"false":0.90, "true":0.10 }}
+   ]
+  }
+
+]
+
+
+
+
+
+
+phase-2 (camp_id=1)
+
+p2.gold.true
+
+[
+  {"name":"trans_id","class":"int", "min":10000, "max":20000},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-05-01", "end":"2014-05-31"},
+  {"name":"time", "class":"date", "format":"HH:mm:ss"},
+  {"name":"user_info","class":"map","value":
+   [
+    {"name":"cust_id", "class":"int", "min":1001,"max":5000, "skew":1},
+    {"name":"device", "class":"string", "dist":{"IOS5":0.4, "IOS6":0.15, "IOS7":0.10, "AOS4.2":0.20, "AOS4.3":0.10, "AOS4.4":0.05 }},
+    {"name":"state", "class":"state"}
+   ]
+  },
+  {"name":"ad_info", "class":"map","value":
+   [
+    {"name":"camp_id", "class":"string", "dist":{1:1}}
+   ]
+  },
+
+  {"name":"trans_info", "class":"map","value":
+   [
+    {"name":"prod_id", "class":"sequence", "length":4,
+     "base": {"class": "foreign-key", "size":100, "skew":1 }
+    },
+    {"name":"purch_flag", "class":"string", "dist":{"false":0.5, "true":0.5 }}
+   ]
+  }
+
+]
+
+p2.gold.false
+
+[
+  {"name":"trans_id","class":"int", "min":40001, "max":50000},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-05-01", "end":"2014-05-31"},
+  {"name":"time", "class":"date", "format":"HH:mm:ss"},
+  {"name":"user_info","class":"map","value":
+   [
+    {"name":"cust_id", "class":"int", "min":1001,"max":5000, "skew":1},
+    {"name":"device", "class":"string", "dist":{"IOS5":0.4, "IOS6":0.15, "IOS7":0.10, "AOS4.2":0.20, "AOS4.3":0.10, "AOS4.4":0.05 }},
+    {"name":"state", "class":"state"}
+   ]
+  },
+  {"name":"ad_info", "class":"map","value":
+   [
+    {"name":"camp_id", "class":"string", "dist":{null:1}}
+   ]
+  },
+
+  {"name":"trans_info", "class":"map","value":
+   [
+    {"name":"prod_id", "class":"sequence", "length":4,
+     "base": {"class": "foreign-key", "size":200, "skew":1 }
+    },
+    {"name":"purch_flag", "class":"string", "dist":{"false":0.7, "true":0.3 }}
+   ]
+  }
+
+]
+
+
+
+p2.silver
+
+[
+  {"name":"trans_id","class":"int", "min":20001, "max":30000},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-05-01", "end":"2014-05-31"},
+  {"name":"time", "class":"date", "format":"HH:mm:ss"},
+  {"name":"user_info","class":"map","value":
+   [
+    {"name":"cust_id", "class":"int", "min":5001,"max":15000, "skew":1},
+    {"name":"device", "class":"string", "dist":{"IOS5":0.4, "IOS6":0.15, "IOS7":0.10, "AOS4.2":0.20, "AOS4.3":0.10, "AOS4.4":0.05 }},
+    {"name":"state", "class":"state"}
+   ]
+  },
+  {"name":"ad_info", "class":"map","value":
+   [
+    {"name":"camp_id", "class":"string", "dist":{null:.9, 1:0.1}}
+   ]
+  },
+
+  {"name":"trans_info", "class":"map","value":
+   [
+    {"name":"prod_id", "class":"sequence", "length":4,
+     "base": {"class": "foreign-key", "size":960, "skew":1 }
+    },
+    {"name":"purch_flag", "class":"string", "dist":{"false":0.75, "true":0.25 }}
+   ]
+  }
+
+]
+
+p2.basic
+
+[
+  {"name":"trans_id","class":"int", "min":30001, "max":40000},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-05-01", "end":"2014-05-31"},
+  {"name":"time", "class":"date", "format":"HH:mm:ss"},
+  {"name":"user_info","class":"map","value":
+   [
+    {"name":"cust_id", "class":"int", "min":15001,"max":25000, "skew":1},
+    {"name":"device", "class":"string", "dist":{"IOS5":0.4, "IOS6":0.15, "IOS7":0.10, "AOS4.2":0.20, "AOS4.3":0.10, "AOS4.4":0.05 }},
+    {"name":"state", "class":"state"}
+   ]
+  },
+  {"name":"ad_info", "class":"map","value":
+   [
+    {"name":"camp_id", "class":"string", "dist":{null:0.95, 1:0.05}}
+   ]
+  },
+
+  {"name":"trans_info", "class":"map","value":
+   [
+    {"name":"prod_id", "class":"sequence", "length":4,
+     "base": {"class": "foreign-key", "size":960, "skew":1 }
+    },
+    {"name":"purch_flag", "class":"string", "dist":{"false":0.85, "true":0.15 }}
+   ]
+  }
+
+]
