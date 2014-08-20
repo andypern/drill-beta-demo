@@ -76,12 +76,12 @@ In the UI (http://ip:8047) , go to the Storage page, then create the following s
 	      "storageformat": null
 	    },
 	    "nested": {
-	      "location": "/mapr/demo.mapr.com/data/clicks",
+	      "location": "/mapr/demo.mapr.com/data/nested",
 	      "writable": true,
 	      "storageformat": "parquet"
 	    },
 	    "flat": {
-	      "location": "/mapr/drilldemo/data/logs",
+	      "location": "/mapr/drilldemo/data/flat",
 	      "writable": true,
 	      "storageformat": "parquet"
 	    },
@@ -198,4 +198,15 @@ Verify tables exist:
 	1 row selected (0.437 seconds)
 	
 	
+"Quick" query:
+
+	select cast (row_key as int) as prod_id, cast
+	(t.details.name as varchar(20)) as name, cast
+	(t.details.category as varchar(20)) as category, cast
+	(t.pricing.price as varchar(20)) as price
+	 from products t limit 10;
+	 
+
+	 
+	 
 
