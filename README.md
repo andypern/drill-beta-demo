@@ -81,12 +81,12 @@ In the UI (http://ip:8047) , go to the Storage page, then create the following s
 	      "storageformat": "parquet"
 	    },
 	    "flat": {
-	      "location": "/mapr/drilldemo/data/flat",
+	      "location": "/mapr/demo.mapr.com/data/flat",
 	      "writable": true,
 	      "storageformat": "parquet"
 	    },
 	    "views": {
-	      "location": "/mapr/drilldemo/data/views",
+	      "location": "/mapr/demo.mapr.com/data/views",
 	      "writable": true,
 	      "storageformat": "parquet"
 	    }
