@@ -49,7 +49,7 @@ In the UI (http://ip:8047) , go to the Storage page, then create the following s
 
 
 
-####MapRDB
+####maprdb
 
 	
 	{
@@ -63,7 +63,7 @@ In the UI (http://ip:8047) , go to the Storage page, then create the following s
 
 	
 	
-####MFS
+####mfs
 
 	{
 	  "type": "file",
@@ -122,7 +122,7 @@ In the UI (http://ip:8047) , go to the Storage page, then create the following s
 	  }
 	}
 	
-####HIVE
+####hive
 
 	{
 	  "type": "hive",
