@@ -3,7 +3,7 @@
 CLUSTERNAME=$( head -n 1 /opt/mapr/conf/mapr-clusters.conf|awk {'print $1'} )
 
 NFSMOUNT=/mapr/${CLUSTERNAME}
-TABLENAME="products"
+TABLENAME="embeddedclicks"
 TABLEPATH=${NFSMOUNT}/tables/${TABLENAME}
 
 #first , delete if it exists
