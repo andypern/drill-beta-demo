@@ -1,11 +1,13 @@
-clicks phase-1:
+(months 6,7,8,9)
 
 
-p1.gold  
+
+m1.clicks.gold.json
+//-count 10000  
 
 [
   {"name":"trans_id","class":"int", "min":10000, "max":20000},
-  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-04-01", "end":"2014-04-30"},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-06-01", "end":"2014-06-30"},
   {"name":"time", "class":"date", "format":"HH:mm:ss"},
   {"name":"user_info","class":"map","value":
    [
@@ -26,7 +28,7 @@ p1.gold
 ]
 
 
-p1.silver
+m1.clicks.silver.json
 
 [
   {"name":"trans_id","class":"int", "min":20001, "max":30000},

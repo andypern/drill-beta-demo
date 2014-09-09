@@ -84,10 +84,12 @@ sub orders_agg {
 	    open(OUTPUT, ">>$agg_file");
 	    foreach my $line (@data) {
 	    	unless($iter < 1){
-	    		if($line =~ /([0-9]+,"[A-Za-z]+",)"([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9:]+)"(,.+)/) {
-	    			my $newline = $1 . $2 . $3;
-	    			print OUTPUT "$newline\n";
-	    		}
+	    		$line =~ s/"//g;
+	    		# if($line =~ /([0-9]+,)"([A-Za-z]+)"(,)"([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9:]+)"(,.+)/) {
+	    		# 	my $newline = $1 . $2 . $3 . 4 . 5;
+	    		# 	print OUTPUT "$newline\n";
+	    		# }
+	    		print OUTPUT $line;
 	    	}
 	    	$iter +=1;
 	    }
@@ -110,10 +112,12 @@ sub orders_agg {
 	    open(OUTPUT, ">>$agg_file");
 	    foreach my $line (@data) {
 	    	unless($iter < 1){
-	    		if($line =~ /([0-9]+,"[A-Za-z]+",)"([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9:]+)"(,.+)/) {
-					my $newline = $1 . $2 . $3;
-					print OUTPUT "$newline\n";
-	    		}
+	    		$line =~ s/"//g;
+	    		print OUTPUT $line;
+	    # 		if($line =~ /([0-9]+,)"([A-Za-z]+)"(,)"([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9:]+)"(,.+)/) {
+					# my $newline = $1 . $2 . $3 . $4 . $5;
+					# print OUTPUT "$newline\n";
+	    # 		}
 	    	}
 	    	$iter +=1;
 	    }
@@ -137,11 +141,12 @@ sub orders_agg {
 	    	#chomp($line);
 	    	unless($iter < 1){
 	    		unless($line =~ /"ca"|"il"/){
-
-		    		if($line =~ /([0-9]+,"[A-Za-z]+",)"([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9:]+)"(,.+)/) {
-						my $newline = $1 . $2 . $3;
-						print OUTPUT "$newline\n";
-	    			}
+		    		$line =~ s/"//g;
+		    		print OUTPUT $line;
+		    # 		if($line =~ /([0-9]+,)"([A-Za-z]+)"(,)"([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9:]+)"(,.+)/) {
+						# my $newline = $1 . $2 . $3 . $4 . $5;
+						# print OUTPUT "$newline\n";
+	    	# 		}
 		    	}
 	    	}
 	    	$iter +=1;
