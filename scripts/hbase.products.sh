@@ -19,7 +19,7 @@ echo 'create '"'${TABLENAME}'"',"details","pricing"' | hbase shell
 
 #import
 
-hadoop jar $HBASE_HOME/hbase-0.94.17-mapr-1405.jar \
+hadoop jar $HBASE_HOME/hbase-0.94.21-mapr-1407-SNAPSHOT.jar \
         importtsv -Dimporttsv.separator=, \
         -Dimporttsv.columns=HBASE_ROW_KEY,details:name,details:category,pricing:price \
         ${TABLENAME} \
