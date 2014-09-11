@@ -702,8 +702,8 @@ month10.ca.orders.gold.json
 
 [
   {"name":"order_id","class":"id", "start":130283 },
- {"name":"month", "class":"string", "dist":{"September":1}},
- {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-09-01", "end":"2014-09-30"},
+ {"name":"month", "class":"string", "dist":{"October":1}},
+ {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-10-01", "end":"2014-10-31"},
     {"name":"cust_id", "class":"int", "min":1001,"max":5000},
     {"name":"state", "class":"string", "dist":{"ca":1}},
     {"name":"prod_id", "class": "foreign-key", "size":949, "skew":0},
@@ -716,8 +716,8 @@ month10.ca.orders.silver.json
 
 [
   {"name":"order_id","class":"id", "start":130780 },
- {"name":"month", "class":"string", "dist":{"September":1}},
-  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-09-01", "end":"2014-09-30"},
+ {"name":"month", "class":"string", "dist":{"October":1}},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-10-01", "end":"2014-10-31"},
     {"name":"cust_id", "class":"int", "min":5001,"max":15000},
     {"name":"state", "class":"string", "dist":{"ca":1}},
     {"name":"prod_id", "class": "foreign-key", "size":949, "skew":0},
@@ -730,8 +730,8 @@ month10.ca.orders.basic.json
 
 [
   {"name":"order_id","class":"id", "start":131277 },
- {"name":"month", "class":"string", "dist":{"September":1}},
-  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-09-01", "end":"2014-09-30"},
+ {"name":"month", "class":"string", "dist":{"October":1}},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-10-01", "end":"2014-10-31"},
     {"name":"cust_id", "class":"int", "min":15001,"max":25000},
     {"name":"state", "class":"string", "dist":{"ca":1}},
     {"name":"prod_id", "class": "foreign-key", "size":949, "skew":0},
@@ -747,8 +747,8 @@ month10.il.orders.gold.json
 
 [
   {"name":"order_id","class":"id", "start":131682 },
- {"name":"month", "class":"string", "dist":{"September":1}},
- {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-09-01", "end":"2014-09-30"},
+ {"name":"month", "class":"string", "dist":{"October":1}},
+ {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-10-01", "end":"2014-10-31"},
     {"name":"cust_id", "class":"int", "min":1001,"max":5000},
     {"name":"state", "class":"string", "dist":{"il":1}},
     {"name":"prod_id", "class": "foreign-key", "size":949, "skew":0},
@@ -762,8 +762,8 @@ month10.il.orders.silver.json
 
 [
   {"name":"order_id","class":"id", "start":131919 },
- {"name":"month", "class":"string", "dist":{"September":1}},
-  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-09-01", "end":"2014-09-30"},
+ {"name":"month", "class":"string", "dist":{"October":1}},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-10-01", "end":"2014-10-31"},
     {"name":"cust_id", "class":"int", "min":5001,"max":15000},
     {"name":"state", "class":"string", "dist":{"il":1}},
     {"name":"prod_id", "class": "foreign-key", "size":949, "skew":0},
@@ -776,8 +776,8 @@ month10.il.orders.basic.json
 
 [
   {"name":"order_id","class":"id", "start":132081 },
- {"name":"month", "class":"string", "dist":{"September":1}},
-  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-09-01", "end":"2014-09-30"},
+ {"name":"month", "class":"string", "dist":{"October":1}},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-10-01", "end":"2014-10-31"},
     {"name":"cust_id", "class":"int", "min":15001,"max":25000},
     {"name":"state", "class":"string", "dist":{"il":1}},
     {"name":"prod_id", "class": "foreign-key", "size":949, "skew":0},
@@ -791,8 +791,8 @@ month10.allstates.orders.gold.json
 
 [
   {"name":"order_id","class":"id", "start":132202 },
- {"name":"month", "class":"string", "dist":{"September":1}},
-  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-09-01", "end":"2014-09-30"},
+ {"name":"month", "class":"string", "dist":{"October":1}},
+  {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-10-01", "end":"2014-10-31"},
     {"name":"cust_id", "class":"int", "min":1001,"max":5000},
     {"name":"state", "class":"state"},
     {"name":"prod_id", "class": "foreign-key", "size":949, "skew":1},
@@ -805,8 +805,8 @@ month10.allstates.orders.silver.json
 
 [
   {"name":"order_id","class":"id", "start":139202 },
- {"name":"month", "class":"string", "dist":{"September":1}},
- {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-09-01", "end":"2014-09-30"},
+ {"name":"month", "class":"string", "dist":{"October":1}},
+ {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-10-01", "end":"2014-10-31"},
     {"name":"cust_id", "class":"int", "min":5001,"max":15000},
     {"name":"state", "class":"state"},
     {"name":"prod_id", "class": "foreign-key", "size":949, "skew":1},
@@ -819,8 +819,8 @@ month10.allstates.orders.basic.json
 
 [
   {"name":"order_id","class":"id", "start":143202 },
-{"name":"month", "class":"string", "dist":{"September":1}},
-{"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-09-01", "end":"2014-09-30"},
+{"name":"month", "class":"string", "dist":{"October":1}},
+{"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-10-01", "end":"2014-10-31"},
     {"name":"cust_id", "class":"int", "min":15001,"max":25000},
     {"name":"state", "class":"state"},
     {"name":"prod_id", "class": "foreign-key", "size":949, "skew":1},
