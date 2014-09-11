@@ -44,19 +44,22 @@ fi
 
 
 
+#figure out drill version, if it was pre-installed
+
+DRILL_REV=$( ls /opt/mapr/drill )
 
 
 #modify max memory and max heap in drill-env.sh
 
-sed -r -i 's/8G/2G/' /opt/mapr/drill/drill-0.4.0/conf/drill-env.sh
-sed -r -i 's/4G/1G/' /opt/mapr/drill/drill-0.4.0/conf/drill-env.sh
+sed -r -i 's/8G/2G/' /opt/mapr/drill/${DRILL_REV}/conf/drill-env.sh
+sed -r -i 's/4G/1G/' /opt/mapr/drill/${DRILL_REV}/conf/drill-env.sh
 
 #fix zk port
-sed -r -i 's/2181/5181/' /opt/mapr/drill/drill-0.4.0/conf/drill-override.conf 
+sed -r -i 's/2181/5181/' /opt/mapr/drill/${DRILL_REV}/conf/drill-override.conf 
 
 #set hadoop_home
 
-echo "export HADOOP_HOME="/opt/mapr/hadoop/hadoop-0.20.2/"" >> /opt/mapr/drill/drill-0.4.0/conf/drill-env.sh
+echo "export HADOOP_HOME="/opt/mapr/hadoop/hadoop-0.20.2/"" >> /opt/mapr/drill/${DRILL_REV}/conf/drill-env.sh
 
 # start drill
 /opt/mapr/server/configure.sh -R
@@ -98,9 +101,14 @@ chown mapr:mapr ${DATADIR}
 
 #make the products table in MapRDB as well
 
-
+#products
 sh ${REPODIR}/scripts/maprdb.products.sh
 
+#customers
+sh ${REPODIR}/scripts/maprdb.customers.sh
+
+#special embedded json table
+sh ${REPODIR}/scripts/maprdb.embedded.json.sh
 
 #make the HIVE tables
 
@@ -111,13 +119,14 @@ sh ${REPODIR}/scripts/maprdb.products.sh
 /usr/bin/hive -e "drop table orders;"
 
 
-/usr/bin/hive -f ${REPODIR}/scripts/customers.hive.table.hql
+#edit 09/10/2014 : we're now putting customers into maprDB and not HIVE
+#/usr/bin/hive -f ${REPODIR}/scripts/customers.hive.table.hql
 
 /usr/bin/hive -f ${REPODIR}/scripts/orders.hive.hql
 
 # add some aliases
 
-echo "alias sqlline='/opt/mapr/drill/drill-0.4.0/bin/sqlline -u jdbc:drill:'" >> /root/.bashrc
+echo "alias sqlline='/opt/mapr/drill/${DRILL_REV}/bin/sqlline -u jdbc:drill:'" >> /root/.bashrc
 source /root/.bashrc
 
 
