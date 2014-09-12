@@ -19,7 +19,7 @@ echo 'create '"'${TABLENAME}'"',"personal","address","loyalty"' | hbase shell
 
 #import
 
-hadoop jar $HBASE_HOME/hbase-0.94.21-mapr-1407-SNAPSHOT.jar \
+hadoop jar $HBASE_HOME/hbase-0.94.21-mapr-1407.jar \
         importtsv -Dimporttsv.separator=, \
         -Dimporttsv.columns=HBASE_ROW_KEY,personal:name,address:state,personal:gender,personal:age,loyalty:agg_rev,loyalty:membership\
         ${TABLENAME} \
