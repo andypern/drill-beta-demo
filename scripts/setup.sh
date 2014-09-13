@@ -38,7 +38,7 @@ fi
 #figure out drill version, if it was pre-installed
 
 DRILL_REV=$( ls /opt/mapr/drill )
-
+DRILL_REV=${DRILL_REV:-0.5.0}
 
 #modify max memory and max heap in drill-env.sh
 
