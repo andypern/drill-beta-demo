@@ -30,15 +30,6 @@ fi
 
 # check if drill RPM is already installed
 
-if ! rpm -qa | grep drill
-	then
-	# grab tarball from package.mapr.com
-	cd /tmp
-	rm -f *.rpm
-	wget http://package.mapr.com/labs/drill/redhat/mapr-drill-0.4.0.26711-1.noarch.rpm
-	rpm -ivh /tmp/mapr-drill-0.4.0.26711-1.noarch.rpm
-fi
-
 
 # i
 
