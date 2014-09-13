@@ -8,7 +8,7 @@ HBVERSION=$( cat /opt/mapr/hbase/hbaseversion )
 export HBASE_HOME=/opt/mapr/hbase/hbase-${HBVERSION}
 CLUSTERNAME=$( head -n 1 /opt/mapr/conf/mapr-clusters.conf|awk {'print $1'} )
 NFSMOUNT=/mapr/${CLUSTERNAME}
-TABLENAME="sustomers"
+TABLENAME="customers"
 TABLEPATH=${NFSMOUNT}/tables/${TABLENAME}
 
 #first delete table via hbase shell
