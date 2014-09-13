@@ -17,7 +17,14 @@ echo 'disable '"'${TABLEPATH}'"'' | hbase shell
 echo 'drop '"'${TABLEPATH}'"'' | hbase shell
 
 #create table + 2 CF's
-echo 'create '"'${TABLEPATH}'"',"personal","address","loyalty"' | hbase shell
+#echo 'create '"'${TABLEPATH}'"',"personal","address","loyalty"' | hbase shell
+
+maprcli table create -path ${TABLEPATH} -defaultreadperm 'g:mapr | g:root' -defaultwriteperm 'g:mapr | g:root' -defaultappendperm 'g:mapr | g:root'
+maprcli table cf create -path ${TABLEPATH} -cfname personal
+maprcli table cf create -path ${TABLEPATH} -cfname address
+maprcli table cf create -path ${TABLEPATH} -cfname loyalty
+
+/usr/bin/hadoop fs -chmod 777 ${TABLEPATH}
 
 #import
 
