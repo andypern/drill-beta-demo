@@ -30,15 +30,6 @@ fi
 
 # check if drill RPM is already installed
 
-if ! rpm -qa | grep drill
-	then
-	# grab tarball from package.mapr.com
-	cd /tmp
-	rm -f *.rpm
-	wget http://package.mapr.com/labs/drill/redhat/mapr-drill-0.4.0.26711-1.noarch.rpm
-	rpm -ivh /tmp/mapr-drill-0.4.0.26711-1.noarch.rpm
-fi
-
 
 # i
 
@@ -47,36 +38,36 @@ fi
 #figure out drill version, if it was pre-installed
 
 DRILL_REV=$( ls /opt/mapr/drill )
-
+DRILL_REV=${DRILL_REV:-0.5.0}
 
 #modify max memory and max heap in drill-env.sh
 
-sed -r -i 's/8G/2G/' /opt/mapr/drill/${DRILL_REV}/conf/drill-env.sh
-sed -r -i 's/4G/1G/' /opt/mapr/drill/${DRILL_REV}/conf/drill-env.sh
+#sed -r -i 's/8G/2G/' /opt/mapr/drill/${DRILL_REV}/conf/drill-env.sh
+#sed -r -i 's/4G/1G/' /opt/mapr/drill/${DRILL_REV}/conf/drill-env.sh
 
 #fix zk port
 sed -r -i 's/2181/5181/' /opt/mapr/drill/${DRILL_REV}/conf/drill-override.conf 
 
 #set hadoop_home
 
-echo "export HADOOP_HOME="/opt/mapr/hadoop/hadoop-0.20.2/"" >> /opt/mapr/drill/${DRILL_REV}/conf/drill-env.sh
+#echo "export HADOOP_HOME="/opt/mapr/hadoop/hadoop-0.20.2/"" >> /opt/mapr/drill/${DRILL_REV}/conf/drill-env.sh
 
 # start drill
-/opt/mapr/server/configure.sh -R
+#/opt/mapr/server/configure.sh -R
 
 
-sleep 30
+#sleep 30
 
-echo "sleeping 30 seconds, then restarting drillbits"
-maprcli node services -name drill-bits -action restart -filter csvc==drill-bits
+#echo "sleeping 30 seconds, then restarting drillbits"
+#maprcli node services -name drill-bits -action restart -filter csvc==drill-bits
 
 
 
 #verify ports are open:
-echo "sleeping for 30 seconds"
+#echo "sleeping for 30 seconds"
 
 
-sleep 30
+#sleep 30
 
 lsof -i:8047
 

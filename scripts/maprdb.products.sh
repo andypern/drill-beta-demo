@@ -35,7 +35,7 @@ CLUSTERNAME=$( cat /opt/mapr/conf/mapr-clusters.conf |awk {'print $1'} )
 
 #import
 
-hadoop jar $HBASE_HOME/hbase-0.94.17-mapr-1405.jar \
+hadoop jar $HBASE_HOME/hbase-0.94.21-mapr-1407.jar \
         importtsv -Dimporttsv.separator=, \
         -Dimporttsv.columns=HBASE_ROW_KEY,details:name,details:category,pricing:price \
         ${TABLEPATH} \
