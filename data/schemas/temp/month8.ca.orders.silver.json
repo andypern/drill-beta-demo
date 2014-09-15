@@ -1,0 +1,12 @@
+//-count 480
+
+[
+  {"name":"order_id","class":"id", "start":94712 },
+ {"name":"month", "class":"string", "dist":{"August":1}},
+{"name":"date", "class":"date", "format":"yyyy-MM-dd HH:mm:ss", "start":"2014-08-01 00:00:01", "end":"2014-08-31 23:59:59"},
+    {"name":"cust_id", "class":"int", "min":5001,"max":15000},
+    {"name":"state", "class":"string", "dist":{"ca":1}},
+    {"name":"prod_id", "class": "foreign-key", "size":949, "skew":0},
+    {"name":"order_total", "class":"int", "min":9, "max":91}
+
+]

@@ -1,0 +1,12 @@
+//-count 623
+
+[
+  {"name":"order_id","class":"id", "start":130283 },
+ {"name":"month", "class":"string", "dist":{"October":1}},
+ {"name":"date", "class":"date", "format":"yyyy-MM-dd", "start":"2014-10-01", "end":"2014-10-31"},
+    {"name":"cust_id", "class":"int", "min":1001,"max":5000},
+    {"name":"state", "class":"string", "dist":{"ca":1}},
+    {"name":"prod_id", "class": "foreign-key", "size":949, "skew":0},
+    {"name":"order_total", "class":"int", "min":12, "max":189}
+
+]

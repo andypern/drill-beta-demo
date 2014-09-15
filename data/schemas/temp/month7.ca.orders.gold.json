@@ -1,0 +1,14 @@
+//-count 615
+
+//to 'flatten', all we do is flip the skew from 1 => 0. this also results in the most popular products from previous months to drop rapidly.
+
+[
+  {"name":"order_id","class":"id", "start":76000 },
+ {"name":"month", "class":"string", "dist":{"July":1}},
+{"name":"date", "class":"date", "format":"yyyy-MM-dd HH:mm:ss", "start":"2014-07-01 00:00:01", "end":"2014-07-31 23:59:59"},
+    {"name":"cust_id", "class":"int", "min":1001,"max":5000},
+    {"name":"state", "class":"string", "dist":{"ca":1}},
+    {"name":"prod_id", "class": "foreign-key", "size":949, "skew":0},
+    {"name":"order_total", "class":"int", "min":10, "max":151}
+
+]
