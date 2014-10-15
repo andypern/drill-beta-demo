@@ -47,7 +47,11 @@ fi
 #figure out drill version, if it was pre-installed
 
 DRILL_REV=$( ls /opt/mapr/drill )
+#figure out HIVE version..
 
+HIVE_REV=$( ls /opt/mapr/hive )
+
+#warn if HIVE rev is not 12
 
 #modify max memory and max heap in drill-env.sh
 
