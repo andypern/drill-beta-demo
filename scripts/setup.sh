@@ -117,8 +117,7 @@ sh ${REPODIR}/scripts/maprdb.embedded.json.sh
 
 # add some aliases
 
-echo "alias sqlline='/opt/mapr/drill/${DRILL_REV}/bin/sqlline -u jdbc:drill:'" >> /root/.bashrc
-source /root/.bashrc
+echo "alias sqlline='/opt/mapr/drill/${DRILL_REV}/bin/sqlline -u jdbc:drill:'" >> /etc/profile
 
 
 
