@@ -358,7 +358,7 @@ Here's a join:
 
 	select n.trans_id, n.sess_date, n.device, p.name as product, p.category 
 	from nestedclickview n, productview p 
-	where n.prod_id[0] = p.prod_id and n.purch_flag=true limit 3;
+	where n.prod_id[0] = p.prod_id limit 3;
 	
 Output:
 
@@ -378,7 +378,7 @@ Lets try a 3-way join w/ HIVE
 	select n.trans_id, n.sess_date, n.device, p.name as product, p.category,
 	c.name as customer, c.gender, c.membership  
 	from nestedclickview n, productview p, hive.`default`.customers c
-	where n.prod_id[0] = p.prod_id and c.cust_id = n.cust_id and n.purch_flag=true limit 3;
+	where n.prod_id[0] = p.prod_id and c.cust_id = n.cust_id  limit 3;
 
 Output:
 
@@ -395,6 +395,8 @@ Output:
 Pretty nifty.
 
 ###Arrays
+
+####Repeated Count
 
 You may have noticed that in our JSON queries we directly accessed the 'prod_id' array using an array index.  That's one example of how to handle dealing with arrays.  Another is to use the repeated_count function to allow you to count the # of elements in the array for a given record.  Here's an example:
 
@@ -458,10 +460,103 @@ Output:
 	+------------+------------+------------+------------+------------+------------+
 	3 rows selected (4.429 seconds)
 
+####Flatten
+Ok great, you can use an array-index, and you can use repeated_count, but what if you want to do some aggregations and get each of the array elements to be usable in a query?  Flatten to the rescue!
+
+
+
+	select t.trans_id,t.`date` as sess_date, t.user_info.cust_id as cust_id,t.user_info.device as device,
+	flatten(t.trans_info.prod_id) as prod_ids,
+	t.trans_info.purch_flag as purch_flag from mfs.nested.clicks t limit 10;
+	
+Or here's the same query, in combination with repeated_count, to only show the transactions where the user selected more than 2 unique prod_id's :
+
+	
+	select t.trans_id,t.`date` as sess_date, t.user_info.cust_id as cust_id,t.user_info.device as device,
+	flatten(t.trans_info.prod_id) as prod_ids,
+	t.trans_info.purch_flag as purch_flag from mfs.nested.clicks t 	where repeated_count(t.trans_info.prod_id) > 2 limit 30;
+	
+###JSON embedded in HBASE/MaprDB
+
+But what if JSON lives inside MaprDB?  We've inserted some data into a MaprDB table, named `embeddedclicks`
+
+First, switch to that db:
+
+	use maprdb;
+
+Now, lets look at one of the rows:
+
+	select * from embeddedclicks limit 3;
+
+which gives us;
+
+		+------------+------------+
+	|  row_key   |    blob    |
+	+------------+------------+
+	| [B@2be994d3 | {"json":"eyJ0cmFuc19pZCI6MTAwMDAsImRhdGUiOiIyMDE0LTA1LTE3IiwidGltZSI6IjAyOjI0OjU4IiwidXNlcl9pbmZvIjp7ImN1c3RfaWQiOjI4NDEsImRldmljZSI6IklPUzUiLCJzdGF0ZSI6InZhIn0sImFkX2luZm8iOnsiY2FtcF9pZCI6IjEifSwidHJhbnNfaW5mbyI6eyJwcm9kX2lkIjpbXSwicHVyY2hfZmxhZyI6InRydWUifX0="} |
+	| [B@7429bf2a | {"json":"eyJ0cmFuc19pZCI6MTAwMDEsImRhdGUiOiIyMDE0LTA1LTIyIiwidGltZSI6IjE3OjUxOjE0IiwidXNlcl9pbmZvIjp7ImN1c3RfaWQiOjMyMjIsImRldmljZSI6IklPUzUiLCJzdGF0ZSI6ImZsIn0sImFkX2luZm8iOnsiY2FtcF9pZCI6IjEifSwidHJhbnNfaW5mbyI6eyJwcm9kX2lkIjpbNTEsNCwyLDEsMCwwLDQ3LDEsOSwxLDgzXSwicHVyY2hfZmxhZyI6ImZhbHNlIn19"} |
+	| [B@4d001db8 | {"json":"eyJ0cmFuc19pZCI6MTAwMDMsImRhdGUiOiIyMDE0LTA1LTA1IiwidGltZSI6IjA4OjEzOjAwIiwidXNlcl9pbmZvIjp7ImN1c3RfaWQiOjM2MjUsImRldmljZSI6IklPUzYiLCJzdGF0ZSI6ImlhIn0sImFkX2luZm8iOnsiY2FtcF9pZCI6IjEifSwidHJhbnNfaW5mbyI6eyJwcm9kX2lkIjpbMCw3N10sInB1cmNoX2ZsYWciOiJmYWxzZSJ9fQ=="} |
+	+------------+------------+
+	3 rows selected (0.262 seconds)
+	
+	
+not so useful.  lets cast to get things out:
+
+
+	select cast (row_key as int) as mykey, cast (t.`blob`.json as varchar(600)) as
+	jblob from embeddedclicks t limit 3;
+	
+this is a little better:
+
+	+------------+------------+
+	|   mykey    |   jblob    |
+	+------------+------------+
+	| 10000      | {"trans_id":10000,"date":"2014-05-17","time":"02:24:58","user_info":{"cust_id":2841,"device":"IOS5","state":"va"},"ad_info":{"camp_id":"1"},"trans_info":{"prod_id":[],"purch_flag":"true"}} |
+	| 10001      | {"trans_id":10001,"date":"2014-05-22","time":"17:51:14","user_info":{"cust_id":3222,"device":"IOS5","state":"fl"},"ad_info":{"camp_id":"1"},"trans_info":{"prod_id":[51,4,2,1,0,0,47,1,9,1,83],"purch_flag":"false"}} |
+	| 10003      | {"trans_id":10003,"date":"2014-05-05","time":"08:13:00","user_info":{"cust_id":3625,"device":"IOS6","state":"ia"},"ad_info":{"camp_id":"1"},"trans_info":{"prod_id":[0,77],"purch_flag":"false"}} |
+	+------------+------------+
+	3 rows selected (0.162 seconds)
+
+
+Now that you can see the JSON, you need to use convert_from along with some subscripting to get it out:
+
+
+
+	select foo.mycol.trans_id, foo.mycol.user_info.cust_id from (select convert_from(cast (t.`blob`.json as varchar(600)),'JSON') as mycol from embeddedclicks t) as foo limit 3;
+
+
+much nicer:
+
+
+	+------------+------------+
+	|   EXPR$0   |   EXPR$1   |
+	+------------+------------+
+	| 10000      | 2841       |
+	| 10001      | 3222       |
+	| 10003      | 3625       |
+	+------------+------------+
+	3 rows selected (0.204 seconds)
+
+Now a more useful query:
+
+	select foo.mycol.trans_id as trans_id, foo.mycol.user_info.cust_id as cust_id, foo.mycol.user_info.device as device, 
+	foo.mycol.user_info.state as state, foo.mycol.trans_info.prod_id[0] as prod_id, 
+	foo.mycol.trans_info.purch_flag as purch_flag  from 
+	 (select convert_from(cast (t.`blob`.json as varchar(600)),'JSON') as mycol from embeddedclicks t) 
+	 as foo limit 3;
+ 
+ 
+ 
+ 
 
 
 ##TODO
-###JSON embedded in HBASE/MaprDB
+
+* kvgen function
+* yelp data
+*  twitter data
+
+
 
 ### CSV
 
