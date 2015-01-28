@@ -285,7 +285,7 @@ Here's how to create a view using one of the more complex queries from above:
 
 First for MaprDB:
 
-	create view mfs.views.productview as select cast (row_key as int) as prod_id, cast
+	create or replace view mfs.views.productview as select cast (row_key as int) as prod_id, cast
 	(t.details.name as varchar(20)) as name, cast
 	(t.details.category as varchar(20)) as category, cast
 	(t.pricing.price as varchar(20)) as price
@@ -294,7 +294,7 @@ First for MaprDB:
 Now for our nested JSON:
 
 	
-	create view mfs.views.nestedclickview as select t.trans_id,t.`date` as sess_date, 
+	create or replace view mfs.views.nestedclickview as select t.trans_id,t.`date` as sess_date, 
 	t.user_info.cust_id as cust_id,t.user_info.device as device,
 	t.trans_info.prod_id as prod_id, t.trans_info.purch_flag as purch_flag 
 	from mfs.nested.clicks t
