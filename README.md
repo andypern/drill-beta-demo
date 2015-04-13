@@ -63,9 +63,9 @@ In the UI (http://ip:8047) , go to the Storage page, then create the following s
 
 	
 	
-####mfs
+####dfs
 
-	{
+		{
 	  "type": "file",
 	  "enabled": true,
 	  "connection": "maprfs:///",
@@ -73,22 +73,27 @@ In the UI (http://ip:8047) , go to the Storage page, then create the following s
 	    "root": {
 	      "location": "/mapr/demo.mapr.com/data",
 	      "writable": false,
-	      "storageformat": null
+	      "defaultInputFormat": null
 	    },
-	    "nested": {
+	    "clicks": {
 	      "location": "/mapr/demo.mapr.com/data/nested",
 	      "writable": true,
-	      "storageformat": "parquet"
+	      "defaultInputFormat": null
 	    },
-	    "flat": {
+	    "logs": {
 	      "location": "/mapr/demo.mapr.com/data/flat",
 	      "writable": true,
-	      "storageformat": "parquet"
+	      "defaultInputFormat": null
 	    },
 	    "views": {
 	      "location": "/mapr/demo.mapr.com/data/views",
 	      "writable": true,
-	      "storageformat": "parquet"
+	      "defaultInputFormat": null
+	    },
+	    "tmp": {
+	      "location": "/tmp",
+	      "writable": true,
+	      "defaultInputFormat": null
 	    }
 	  },
 	  "formats": {
@@ -118,6 +123,9 @@ In the UI (http://ip:8047) , go to the Storage page, then create the following s
 	    },
 	    "json": {
 	      "type": "json"
+	    },
+	    "maprdb": {
+	      "type": "maprdb"
 	    }
 	  }
 	}
@@ -153,15 +161,16 @@ You should see something like this:
 	| SCHEMA_NAME |
 	+-------------+
 	| hive.default |
-	| hbase       |
+	| dfs.default |
+	| dfs.logs    |
+	| dfs.root    |
+	| dfs.views   |
+	| dfs.clicks  |
+	| dfs.tmp     |
 	| sys         |
-	| MFS.default |
-	| MFS.nested  |
-	| MFS.root    |
-	| MFS.views   |
-	| MFS.flat    |
+	| maprdb      |
+	| cp.default  |
 	| INFORMATION_SCHEMA |
-	| MAPRDB      |
 	+-------------+
 
 ###HIVE
@@ -177,14 +186,12 @@ Verify tables exist:
 	| TABLE_SCHEMA | TABLE_NAME |
 	+--------------+------------+
 	| hive.default | orders     |
-	| hive.default | customers  |
 	+--------------+------------+
-	2 rows selected (1.157 seconds)
+	1 rows selected (1.157 seconds)
 
 Quick selects:
 
 	select * from orders limit 10;
-	select * from customers limit 10;
 
 
 ###MapR DB (NOSQL)
@@ -199,9 +206,11 @@ Verify tables exist:
 	+--------------+------------+
 	| TABLE_SCHEMA | TABLE_NAME |
 	+--------------+------------+
-	| hbase        | products   |
+	| maprdb       | embeddedclicks |
+	| maprdb       | customers  |
+	| maprdb       | products   |
 	+--------------+------------+
-	1 row selected (0.437 seconds)
+	3 rows selected (0.555 seconds)
 	
 	
 Quick query:
@@ -248,44 +257,48 @@ That's better:
 First, something simple, from a flat (non-nested) JSON file:
 
 
-	select * from mfs.flat.logs limit 10;
+	select * from dfs.logs.logs limit 10;
 
 Directory-based selects:
 
-	select * from mfs.flat.logs where dir0 = 2012 limit 10;
+	select * from dfs.logs.logs where dir0 = 2012 limit 10;
 
-	select * from mfs.flat.logs where dir0 = 2012 and dir1 >=9 limit 10;
+	select * from dfs.logs.logs where dir0 = 2012 and dir1 >=9 limit 10;
 
 Nested JSON:
 
-	select * from mfs.nested.clicks limit 10;
+	select * from dfs.clicks.clicks limit 10;
 
 Now  you'll want to get access to the individual fields inside the JSON blobs:
 
 	select t.trans_id,t.`date` as sess_date, 
 	t.user_info.cust_id as cust_id,t.user_info.device as device,
 	t.trans_info.prod_id as prod_id, t.trans_info.purch_flag as purch_flag 
-	from mfs.nested.clicks t limit 10
+	from dfs.clicks.clicks t limit 10
 
 To get access into the array: 
 
 	select t.trans_id,t.`date` as sess_date, 
 	t.user_info.cust_id as cust_id,t.user_info.device as device, 
 	t.trans_info.prod_id[0] as prod_id, t.trans_info.purch_flag as purch_flag 
-	from mfs.nested.clicks t 
+	from dfs.clicks.clicks t 
 	where t.trans_info.prod_id[0] is not null limit 10;
 
 
 ###Creating views
 
-By now you're noticing that it can be a little cumbersome to get direct access into the more complex data structures (MaprDB and nested JSON).  Especially when joining tables, its easier if you can use a more compact syntax. Creating a view is a simple way to deal with this, and drill provides a simple mechanism to do so.  If you'll note from when you configured the  `mfs` storage plugin, there was a workspace explicitly set aside for views to live in.
+By now you're noticing that it can be a little cumbersome to get direct access into the more complex data structures (MaprDB and nested JSON).  Especially when joining tables, its easier if you can use a more compact syntax. Creating a view is a simple way to deal with this, and drill provides a simple mechanism to do so.  If you'll note from when you configured the  `dfs` storage plugin, there was a workspace explicitly set aside for views to live in.
 
 Here's how to create a view using one of the more complex queries from above:
 
 
 First for MaprDB:
 
-	create or replace view mfs.views.productview as select cast (row_key as int) as prod_id, cast
+	use maprdb;
+
+Create the view:
+
+	create or replace view dfs.views.productview as select cast (row_key as int) as prod_id, cast
 	(t.details.name as varchar(20)) as name, cast
 	(t.details.category as varchar(20)) as category, cast
 	(t.pricing.price as varchar(20)) as price
@@ -294,10 +307,10 @@ First for MaprDB:
 Now for our nested JSON:
 
 	
-	create or replace view mfs.views.nestedclickview as select t.trans_id,t.`date` as sess_date, 
+	create or replace view dfs.views.nestedclickview as select t.trans_id,t.`date` as sess_date, 
 	t.user_info.cust_id as cust_id,t.user_info.device as device,
 	t.trans_info.prod_id as prod_id, t.trans_info.purch_flag as purch_flag 
-	from mfs.nested.clicks t
+	from dfs.clicks.clicks t
 
 	 
 	 
@@ -305,9 +318,22 @@ Here's how to 'view' all of your views:
 
 	select * from INFORMATION_SCHEMA.`VIEWS`;
 	
+Output:
+		
+		0: jdbc:drill:> select * from INFORMATION_SCHEMA.`VIEWS`;
+		+---------------+--------------+------------+-----------------+
+		| TABLE_CATALOG | TABLE_SCHEMA | TABLE_NAME | VIEW_DEFINITION |
+		+---------------+--------------+------------+-----------------+
+		| DRILL         | dfs.views    | productview | SELECT CAST(`row_key` AS INTEGER) AS `prod_id`, CAST(`t`.`details`['name'] AS VARCHAR(20)) AS `name`, CAST(`t`.`details`['category'] AS VARCHAR(20)) AS `category`, CAST(`t`.`pricing`['price'] AS VARCHAR(20)) AS `price`
+		FROM `products` AS `t` |
+		| DRILL         | dfs.views    | nestedclickview | SELECT `t`.`trans_id`, `t`.`date` AS `sess_date`, `t`.`user_info`['cust_id'] AS `cust_id`, `t`.`user_info`['device'] AS `device`, `t`.`trans_info`['prod_id'] AS `prod_id`, `t`.`trans_info`['purch_flag'] AS `purch_flag`
+		FROM `dfs`.`clicks`.`clicks` AS `t` |
+		+---------------+--------------+------------+-----------------+
+		2 rows selected (0.155 seconds)
+	
 To test your views:
 
-	select * from mfs.views.productview limit 3;
+	select * from dfs.views.productview limit 3;
 
 should look like:
 
@@ -322,7 +348,7 @@ should look like:
 
 For nestedclickview :
 
-	select * from mfs.views.nestedclickview limit 3;
+	select * from dfs.views.nestedclickview limit 3;
 
 Which yields:
 
@@ -341,7 +367,7 @@ Now that you have some views setup, test out a quick JOIN between your MaprDB ta
 
 To make things simple, switch workspaces:
 
-	use mfs.views;
+	use dfs.views;
 
 verify you see your views:
 
@@ -373,23 +399,6 @@ Output:
 
 	
 	
-Lets try a 3-way join w/ HIVE
-
-	select n.trans_id, n.sess_date, n.device, p.name as product, p.category,
-	c.name as customer, c.gender, c.membership  
-	from nestedclickview n, productview p, hive.`default`.customers c
-	where n.prod_id[0] = p.prod_id and c.cust_id = n.cust_id  limit 3;
-
-Output:
-
-	+------------+------------+------------+------------+------------+------------+------------+------------+
-	|  trans_id  | sess_date  |   device   |  product   |  category  |  customer  |   gender   | membership |
-	+------------+------------+------------+------------+------------+------------+------------+------------+
-	| 32359      | 2014-04-19 | null       | "Sony notebook" | laptop     | "Debra Stumpf" | "FEMALE"   | "basic"    |
-	| 39435      | 2014-04-22 | null       | #10-4 1/8 x 9 1/2 Pr | Envelopes  | "Susan Thompson" | "FEMALE"   | "basic"    |
-	| 39164      | 2014-04-18 | null       | 12-1/2 Diameter Roun | Office Furnishings | "Tammy Fernandez" | "MALE"     | "basic"    |
-	+------------+------------+------------+------------+------------+------------+------------+------------+
-	3 rows selected (2.727 seconds)
 
 
 Pretty nifty.
@@ -402,7 +411,7 @@ You may have noticed that in our JSON queries we directly accessed the 'prod_id'
 
 	select t.trans_id,t.`date` as sess_date, t.user_info.cust_id as cust_id,t.user_info.device as device,
 	repeated_count(t.trans_info.prod_id) as prod_count, 
-	t.trans_info.purch_flag as purch_flag from mfs.nested.clicks t 
+	t.trans_info.purch_flag as purch_flag from dfs.clicks.clicks t 
 	where repeated_count(t.trans_info.prod_id) > 2 limit 3;
 	
 Output:
@@ -424,7 +433,7 @@ here's another example, this time allowing us to only see those records where le
 	select t.trans_id,t.`date` as sess_date, 
 	t.user_info.cust_id as cust_id,t.user_info.device as device,
 	repeated_count(t.trans_info.prod_id) as prod_count, t.trans_info.purch_flag as purch_flag 
-	from mfs.nested.clicks t 
+	from dfs.clicks.clicks t 
 	where repeated_count(t.trans_info.prod_id) < 10 limit 3;
 
 Output:
@@ -444,7 +453,7 @@ Or maybe you want to order by the repeated_count?
 	select t.trans_id,t.`date` as sess_date, 
 	t.user_info.cust_id as cust_id,t.user_info.device as device,
 	repeated_count(t.trans_info.prod_id) as prod_count, t.trans_info.purch_flag as purch_flag 
-	from mfs.nested.clicks t 
+	from dfs.clicks.clicks t 
 	where repeated_count(t.trans_info.prod_id)  > 0
 	order by  repeated_count(t.trans_info.prod_id) desc limit 3;
 
@@ -467,14 +476,14 @@ Ok great, you can use an array-index, and you can use repeated_count, but what i
 
 	select t.trans_id,t.`date` as sess_date, t.user_info.cust_id as cust_id,t.user_info.device as device,
 	flatten(t.trans_info.prod_id) as prod_ids,
-	t.trans_info.purch_flag as purch_flag from mfs.nested.clicks t limit 10;
+	t.trans_info.purch_flag as purch_flag from dfs.clicks.clicks t limit 10;
 	
 Or here's the same query, in combination with repeated_count, to only show the transactions where the user selected more than 2 unique prod_id's :
 
 	
 	select t.trans_id,t.`date` as sess_date, t.user_info.cust_id as cust_id,t.user_info.device as device,
 	flatten(t.trans_info.prod_id) as prod_ids,
-	t.trans_info.purch_flag as purch_flag from mfs.nested.clicks t 	where repeated_count(t.trans_info.prod_id) > 2 limit 30;
+	t.trans_info.purch_flag as purch_flag from dfs.clicks.clicks t 	where repeated_count(t.trans_info.prod_id) > 2 limit 30;
 	
 ###JSON embedded in HBASE/MaprDB
 
@@ -555,7 +564,7 @@ Now a more useful query:
 * kvgen function
 * yelp data
 *  twitter data
-
+* 
 
 
 ### CSV
