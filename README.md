@@ -485,9 +485,13 @@ Ok great, you can use an array-index, and you can use repeated_count, but what i
 Or here's the same query, in combination with repeated_count, to only show the transactions where the user selected more than 2 unique prod_id's :
 
 	
-	select t.trans_id,t.`date` as sess_date, t.user_info.cust_id as cust_id,t.user_info.device as device,
+	select t.trans_id,t.`date` as sess_date, 
+	t.user_info.cust_id as cust_id,
+	t.user_info.device as device,
 	flatten(t.trans_info.prod_id) as prod_ids,
-	t.trans_info.purch_flag as purch_flag from dfs.clicks.clicks t 	where repeated_count(t.trans_info.prod_id) > 2 limit 30;
+	t.trans_info.purch_flag as purch_flag 
+	from dfs.clicks.clicks t 	
+	where repeated_count(t.trans_info.prod_id) > 2 limit 30;
 	
 ###JSON embedded in HBASE/MaprDB
 
