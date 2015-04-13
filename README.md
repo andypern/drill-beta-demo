@@ -554,8 +554,11 @@ much nicer:
 
 Now a more useful query:
 
-	select foo.mycol.trans_id as trans_id, foo.mycol.user_info.cust_id as cust_id, foo.mycol.user_info.device as device, 
-	foo.mycol.user_info.state as state, foo.mycol.trans_info.prod_id[0] as prod_id, 
+	select foo.mycol.trans_id as trans_id, 
+	foo.mycol.user_info.cust_id as cust_id, 
+	foo.mycol.user_info.device as device, 
+	foo.mycol.user_info.state as state, 
+	foo.mycol.trans_info.prod_id[0] as prod_id, 
 	foo.mycol.trans_info.purch_flag as purch_flag  from 
 	 (select convert_from(cast (t.`blob`.json as varchar(600)),'JSON') as mycol from embeddedclicks t) 
 	 as foo limit 3;
