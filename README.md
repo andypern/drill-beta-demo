@@ -409,9 +409,11 @@ Pretty nifty.
 
 You may have noticed that in our JSON queries we directly accessed the 'prod_id' array using an array index.  That's one example of how to handle dealing with arrays.  Another is to use the repeated_count function to allow you to count the # of elements in the array for a given record.  Here's an example:
 
-	select t.trans_id,t.`date` as sess_date, t.user_info.cust_id as cust_id,t.user_info.device as device,
+	select t.trans_id,t.`date` as sess_date, 
+	t.user_info.cust_id as cust_id,t.user_info.device as device,
 	repeated_count(t.trans_info.prod_id) as prod_count, 
-	t.trans_info.purch_flag as purch_flag from dfs.clicks.clicks t 
+	t.trans_info.purch_flag as purch_flag 
+	from dfs.clicks.clicks t 
 	where repeated_count(t.trans_info.prod_id) > 2 limit 3;
 	
 Output:
@@ -474,9 +476,11 @@ Ok great, you can use an array-index, and you can use repeated_count, but what i
 
 
 
-	select t.trans_id,t.`date` as sess_date, t.user_info.cust_id as cust_id,t.user_info.device as device,
+	select t.trans_id,t.`date` as sess_date, 
+	t.user_info.cust_id as cust_id,t.user_info.device as device,
 	flatten(t.trans_info.prod_id) as prod_ids,
-	t.trans_info.purch_flag as purch_flag from dfs.clicks.clicks t limit 10;
+	t.trans_info.purch_flag as purch_flag 
+	from dfs.clicks.clicks t limit 10;
 	
 Or here's the same query, in combination with repeated_count, to only show the transactions where the user selected more than 2 unique prod_id's :
 
@@ -531,7 +535,9 @@ Now that you can see the JSON, you need to use convert_from along with some subs
 
 
 
-	select foo.mycol.trans_id, foo.mycol.user_info.cust_id from (select convert_from(cast (t.`blob`.json as varchar(600)),'JSON') as mycol from embeddedclicks t) as foo limit 3;
+	select foo.mycol.trans_id, foo.mycol.user_info.cust_id 
+	from (select convert_from(cast (t.`blob`.json as varchar(600)),'JSON') as mycol 
+	from embeddedclicks t) as foo limit 3;
 
 
 much nicer:
